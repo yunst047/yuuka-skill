@@ -1,0 +1,6 @@
+# Shell scripts must keep LF or bash chokes on \r.
+*.sh text eol=lf
+*.js text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.ps1 text eol=crlf

@@ -1,0 +1,9 @@
+{
+  "name": "yuuka",
+  "version": "1.0.0",
+  "description": "Hayase Yuuka mode. Seminar's treasurer audits every allocation: set a goal, write the failing test, pre-allocate the right container, pick letter vs numeric types, check lengths, pass by role, bench to the goal. Kanpeki.",
+  "author": {
+    "name": "Yunst",
+    "url": "https://github.com/yunst047"
+  }
+}

@@ -1,0 +1,10 @@
+# Yuuka runtime state (written by the hooks at session start / mode switch)
+.yuuka-active
+
+# Node
+node_modules/
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db

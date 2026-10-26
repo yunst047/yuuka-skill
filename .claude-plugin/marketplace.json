@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "yuuka",
+  "description": "Hayase Yuuka mode for AI agents — the treasurer who audits every allocation and benchmarks to kanpeki.",
+  "owner": {
+    "name": "Yunst",
+    "url": "https://github.com/yunst047"
+  },
+  "plugins": [
+    {
+      "name": "yuuka",
+      "description": "Test-first, goal-driven allocation efficiency: goal, red test, size, type, pre-allocate, length, pass by role, bench. Kanpeki.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}

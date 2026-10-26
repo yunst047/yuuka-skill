@@ -1,0 +1,40 @@
+{
+  "name": "yuuka",
+  "version": "1.0.0",
+  "description": "Hayase Yuuka mode — the Seminar treasurer who audits every allocation. Test-first, goal-driven, benchmarked to kanpeki. Claude Code plugin + npm installer for any repo.",
+  "bin": {
+    "yuuka-install": "bin/yuuka-install.js"
+  },
+  "scripts": {
+    "test": "node --test",
+    "bench": "node examples/js/bench.js",
+    "install-into": "node bin/yuuka-install.js"
+  },
+  "files": [
+    "skills",
+    "commands",
+    "hooks",
+    "bin",
+    "AGENTS.md"
+  ],
+  "keywords": [
+    "claude-code",
+    "claude-code-plugin",
+    "blue-archive",
+    "yuuka",
+    "performance",
+    "allocation",
+    "benchmark",
+    "tdd",
+    "agent-skill"
+  ],
+  "license": "MIT",
+  "author": "Yunst",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yunst047/yuuka-skill.git"
+  },
+  "engines": {
+    "node": ">=16.7.0"
+  }
+}
