@@ -8,6 +8,7 @@ description: >
   pre-allocate it, choose letter vs numeric element types, check lengths
   before loops, pass by pointer/borrow/value by role, then benchmark until
   the goal is met — kanpeki. Use when code builds or loops over collections,
+  parses or packs binary/wire messages (incl. ISO 8583 payment gateways),
   when the user says "make it faster", "too many allocations", "optimize",
   "pre-allocate", "benchmark this", "yuuka", or invokes /yuuka.
 ---
@@ -55,6 +56,10 @@ sheets — open only the one(s) for the language in front of you:
 
 Any other language: apply the same eight rungs with that language's capacity API,
 view/borrow types, and benchmark tool.
+
+Domain sheets — open alongside the language sheet when the code is in that domain:
+
+- ISO 8583 payment gateway (framing, bitmaps, LLVAR caps, DE4 money, zero-copy parse, exact-size pack, reversal matching) → [references/iso8583.md](references/iso8583.md)
 
 ## Intensity
 

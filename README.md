@@ -34,6 +34,15 @@ It's a sister plugin to [Koyuki (niha-skills)](https://github.com/yunst047/niha-
 
 The ledger has per-language sheets for **Go, Rust, C/C++, Java/Kotlin, C#, Python, JS/TS, Swift and Zig**. Each covers containers and capacity APIs, letter vs number types, length idioms, signatures by role, test and alloc-assert tooling, benchmark tooling, and copy-and-destroy anti-patterns. See [skills/yuuka/references/](skills/yuuka/references/).
 
+It also has a **domain sheet** for **ISO 8583 payment gateways** ([iso8583.md](skills/yuuka/references/iso8583.md)), which walks the same rungs for card-message switches:
+
+- frame and LLVAR/LLLVAR caps from the dialect spec;
+- a spec table indexed by DE number, with bitmaps as bytes;
+- DE4 as integer minor units;
+- zero-copy parse into a reused message, and exact-size pack;
+- request/response matching keys and timeout reversals;
+- PCI-safe logging.
+
 **Never cut these:**
 - no allocation sized from an untrusted length without a cap;
 - no views into reused or freed buffers;
@@ -120,6 +129,8 @@ The statusline shows both: `[YUUKA:LEDGER|KOYUKI:NIHAHA]`.
 | `scale` | `reduce((acc, v) => [...acc, v * k], [])` (O(n²) copies) | One `Int32Array(n)`, length guard, int32 overflow refused |
 | `letterHistogram` | `split('')` + string-keyed `Map` | `charCodeAt` codes into one `Uint32Array(26)` |
 | `sumWindow` | `slice(a, b).reduce(…)` (copies to read) | Read-only index loop, bounds validated once |
+| `iso8583.parse` | Frame → string, `"0101…"` bitmap string, string-keyed fields | Bit tests on bytes, `(offset, len)` views into the frame, reused message, every length capped |
+| `iso8583.pack` | `s += prefix + value`, bit-string bitmap, two more copies | Size in pass 1, one exact `Uint8Array`, write in pass 2 |
 
 `npm run bench` declares the goals before measuring and exits non-zero on a miss. Naive and kanpeki samples are **interleaved**, so laptop clock shifts can't skew the speedup. Here is one run on a Ryzen 7 7735U with Node 24 (5/5 runs met every goal):
 
@@ -128,7 +139,11 @@ case             n       goal                   naive      kanpeki    speedup  v
 scale            2000    ≤ 60.0 µs, ≥ 100x      5.96 ms    12.5 µs    475.3x   kanpeki ✓
 letterHistogram  10000   ≤ 300.0 µs, ≥ 3x       278.5 µs   49.8 µs    5.6x     kanpeki ✓
 sumWindow        100000  ≤ 600.0 µs, ≥ 10x      2.65 ms    96.4 µs    27.5x    kanpeki ✓
+iso8583.parse    343     ≤ 1.5 µs, ≥ 4x         4.1 µs     483 ns     8.4x     kanpeki ✓
+iso8583.pack     104     ≤ 4.0 µs, ≥ 3x         9.3 µs     1.9 µs     5.0x     kanpeki ✓
 ```
+
+The ISO 8583 rows come from a later run on the same machine (Node 24.19). Their goals were set from 5 baseline runs, not guessed. One probe failed: swapping `TypedArray#set` for a byte loop in pack didn't change the numbers, so it was reverted. About 610 ns of pack is its one output allocation, kept on purpose because a reused buffer would alias while `socket.write` still holds it.
 
 **What went wrong first, and why it's in the README:**
 - The first draft guessed its goals (15/60/150 µs) *before* measuring, and missed all three. Momoi had a field day.
@@ -137,7 +152,7 @@ sumWindow        100000  ≤ 600.0 µs, ≥ 10x      2.65 ms    96.4 µs    27.5
 The fix in both cases was the measurement, never the threshold. That is the ledger working as intended.
 
 ```bash
-npm test         # 57 tests: hooks, installer, co-op detection, content lint, demo behaviour/budget
+npm test         # 74 tests: hooks, installer, co-op detection, content lint, demo behaviour/budget
 npm run bench    # goal-checked benchmark
 ```
 

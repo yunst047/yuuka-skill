@@ -12,6 +12,8 @@ Show the Yuuka quick reference. One shot: change nothing. Don't switch mode, wri
 
 **The kanpeki ledger:** goal → test first (red) → size → type (letter vs number) → pre-allocate → check length → pass by role → bench to goal (green + met = **kanpeki ✓ 🧮**, else `short-by:`).
 
+**Domain sheets:** ISO 8583 payment gateway (`skills/yuuka/references/iso8583.md`): capped frame/LLVAR lengths, bitmap bit tests, DE4 integer minor units, zero-copy parse, exact-size pack, masked PANs.
+
 **Never cut these:** untrusted-length allocations · views into reused or freed buffers · unchecked narrowing · float money · weakened tests · unmeasured numbers.
 
 **The crew reacts** (one beat per real moment):

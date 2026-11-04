@@ -1,6 +1,6 @@
 {
   "name": "yuuka",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Hayase Yuuka mode — the Seminar treasurer who audits every allocation. Test-first, goal-driven, benchmarked to kanpeki. Claude Code plugin + npm installer for any repo.",
   "bin": {
     "yuuka-install": "bin/yuuka-install.js"

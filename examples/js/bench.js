@@ -10,6 +10,13 @@ const {
   letterHistogramNaive, letterHistogramKanpeki,
   sumWindowNaive, sumWindowKanpeki,
 } = require('./build');
+const { IsoMessage, parseNaive, parseKanpeki, packNaive, packKanpeki } = require('./iso8583');
+const { request0200, response0210 } = require('./iso8583.fixture');
+
+// A production-shaped 0200 (chip card, 180 B of EMV data) and its 0210 fields.
+const ISO_REQ = packKanpeki(200, request0200());
+const ISO_RESP_FIELDS = response0210(parseKanpeki(ISO_REQ));
+const isoMsg = new IsoMessage(); // one per connection, reused per frame
 
 // yuuka: two goals per case, both derived from measured baselines of THIS
 // harness (Node 24, Ryzen 7 7735U; the clock swings ~2.5x between power-saving
@@ -20,6 +27,10 @@ const {
 //                 interleaved runs: scale 467–523x, letters 5.6–8.1x, window 24–28x).
 // A first draft guessed 15/60/150 µs *before* measuring and missed all three —
 // never set a goal you haven't measured against.
+// yuuka: ISO 8583 goals come from 5 interleaved baseline runs (same machine):
+// parse kanpeki 486–544 ns at 7.6–8.4x, pack 1.7–2.1 µs at 4.7–5.5x. A probe put
+// ~610 ns of pack in its one exact Uint8Array — kept on purpose: packing into a
+// reused buffer would alias it while socket.write still holds it.
 const CASES = [
   {
     name: 'scale', n: 2_000, goalNsPerOp: 60_000, minSpeedup: 100,
@@ -38,6 +49,18 @@ const CASES = [
     setup: (n) => Int32Array.from({ length: n }, (_, i) => i % 97),
     naive: (xs) => sumWindowNaive(xs, 1_000, xs.length - 1_000),
     kanpeki: (xs) => sumWindowKanpeki(xs, 1_000, xs.length - 1_000),
+  },
+  {
+    name: 'iso8583.parse', n: ISO_REQ.length, goalNsPerOp: 1_500, minSpeedup: 4,
+    setup: () => ISO_REQ,
+    naive: (frame) => { const m = parseNaive(frame); return Number(m.fields[4]) + Number(m.fields[11]); },
+    kanpeki: (frame) => { const m = parseKanpeki(frame, isoMsg); return m.amountMinor() + m.num(11); },
+  },
+  {
+    name: 'iso8583.pack', n: packKanpeki(210, ISO_RESP_FIELDS).length, goalNsPerOp: 4_000, minSpeedup: 3,
+    setup: () => ISO_RESP_FIELDS,
+    naive: (f) => packNaive(210, f),
+    kanpeki: (f) => packKanpeki(210, f),
   },
 ];
 

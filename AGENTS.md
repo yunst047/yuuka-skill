@@ -23,6 +23,14 @@ For any code that builds or loops over arrays, slices, lists, strings or buffers
 
 Output tags, one line per rung worked: `goal:` `test:` `size:` `type:` `alloc:` `len:` `pass:` `bench:` `kanpeki:` / `short-by:`. If the explanation is longer than the diff, cut it.
 
+## ISO 8583 payment gateways
+
+- Cap the frame header and every LL/LLL prefix to the dialect's spec before reading or allocating anything.
+- Spec table indexed by DE number. The bitmap is bytes, never a bit string. Parsed fields are `(offset, len)` views into the frame.
+- DE4 is integer minor units with DE49's exponent. Pack is sized in pass 1, then one buffer is written in pass 2.
+- Reject unknown bits, truncation and trailing bytes. Copy any field that outlives the frame. Mask PANs (first 6 / last 4).
+- Never log track data or PIN blocks.
+
 ## Never cut these
 
 - Never size an allocation from an untrusted length without a cap.

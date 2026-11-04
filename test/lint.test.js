@@ -65,6 +65,39 @@ test('all nine language references exist, are linked, and have every section', (
   }
 });
 
+const DOMAINS = ['iso8583'];
+const DOMAIN_SECTIONS = [
+  '## When this sheet applies',
+  '## Goal & tests',
+  '## Size & frame caps',
+  '## Letter vs number',
+  '## Pre-allocate & reuse',
+  '## Length checks',
+  '## Pass by role',
+  '## Benchmarks',
+  '## Copy-and-destroy anti-patterns',
+  '## Never cut (payments)',
+];
+
+test('domain sheets exist, are linked, and have every section', () => {
+  const skill = read('skills', 'yuuka', 'SKILL.md');
+  for (const d of DOMAINS) {
+    const rel = `references/${d}.md`;
+    assert.ok(skill.includes(`(${rel})`), 'SKILL.md links ' + rel);
+    const ref = read('skills', 'yuuka', rel);
+    for (const h of DOMAIN_SECTIONS) assert.ok(ref.includes(h), `${d}: ${h}`);
+  }
+});
+
+test('iso8583 sheet keeps the payment never-cuts', () => {
+  const ref = read('skills', 'yuuka', 'references', 'iso8583.md');
+  for (const needle of [/untrusted/i, /minor units/i, /never float/i, /mask/i, /reversal/i,
+    /test cards only/i, /views never outlive/i]) assert.match(ref, needle);
+  const demo = ref.match(/\]\(([^)]*examples\/js\/iso8583\.js)\)/);
+  assert.ok(demo, 'links the demo');
+  assert.ok(fs.existsSync(path.join(ROOT, 'skills', 'yuuka', 'references', demo[1])), 'demo link resolves');
+});
+
 test('main skill carries the full ruleset', () => {
   const skill = read('skills', 'yuuka', 'SKILL.md');
   for (const needle of [
