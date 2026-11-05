@@ -31,6 +31,13 @@ Output tags, one line per rung worked: `goal:` `test:` `size:` `type:` `alloc:` 
 - Reject unknown bits, truncation and trailing bytes. Copy any field that outlives the frame. Mask PANs (first 6 / last 4).
 - Never log track data or PIN blocks.
 
+## PCI DSS card data
+
+- A PAN is digit bytes that can be zeroed, never a string or an integer. Cap the body and the digit count (13–19) before copying.
+- Build the AEAD and HMAC key once. Seal into one exact buffer (nonce + n + tag). Fingerprints are `[32]byte` keys, not hex.
+- Zero any buffer that held a PAN, SAD or key before reusing or pooling it. Never cache plaintext.
+- Never cut crypto (nonce reuse, dropped AAD, plain hash), constant-time compares or slow password KDFs. Never store SAD after authorisation. Mask to BIN + last 4 at most. The leak test is never relaxed.
+
 ## Never cut these
 
 - Never size an allocation from an untrusted length without a cap.

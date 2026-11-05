@@ -12,7 +12,7 @@ Show the Yuuka quick reference. One shot: change nothing. Don't switch mode, wri
 
 **The kanpeki ledger:** goal → test first (red) → size → type (letter vs number) → pre-allocate → check length → pass by role → bench to goal (green + met = **kanpeki ✓ 🧮**, else `short-by:`).
 
-**Domain sheets:** ISO 8583 payment gateway (`skills/yuuka/references/iso8583.md`): capped frame/LLVAR lengths, bitmap bit tests, DE4 integer minor units, zero-copy parse, exact-size pack, masked PANs.
+**Domain sheets:** ISO 8583 payment gateway (`skills/yuuka/references/iso8583.md`): capped frame/LLVAR lengths, bitmap bit tests, DE4 integer minor units, zero-copy parse, exact-size pack, masked PANs. PCI DSS card data (`skills/yuuka/references/pci-dss.md`): PAN as wipeable bytes, exact-size AES-GCM seal, `[32]byte` fingerprints, zero-alloc mask/redact, zeroed pools; crypto, SAD and leak tests never cut.
 
 **Never cut these:** untrusted-length allocations · views into reused or freed buffers · unchecked narrowing · float money · weakened tests · unmeasured numbers.
 
