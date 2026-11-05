@@ -9,6 +9,7 @@ description: >
   before loops, pass by pointer/borrow/value by role, then benchmark until
   the goal is met — kanpeki. Use when code builds or loops over collections,
   parses or packs binary/wire messages (incl. ISO 8583 payment gateways),
+  handles card data under PCI DSS (PAN bytes, tokenise/encrypt, mask, redact),
   when the user says "make it faster", "too many allocations", "optimize",
   "pre-allocate", "benchmark this", "yuuka", or invokes /yuuka.
 ---
@@ -60,6 +61,7 @@ view/borrow types, and benchmark tool.
 Domain sheets — open alongside the language sheet when the code is in that domain:
 
 - ISO 8583 payment gateway (framing, bitmaps, LLVAR caps, DE4 money, zero-copy parse, exact-size pack, reversal matching) → [references/iso8583.md](references/iso8583.md)
+- PCI DSS card data (PAN as wipeable bytes, exact-size AES-GCM seal, `[32]byte` HMAC fingerprints, zero-alloc mask/redact, zeroed pools, crypto and SAD never cut) → [references/pci-dss.md](references/pci-dss.md)
 
 ## Intensity
 

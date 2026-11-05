@@ -65,7 +65,7 @@ test('all nine language references exist, are linked, and have every section', (
   }
 });
 
-const DOMAINS = ['iso8583'];
+const DOMAINS = ['iso8583', 'pci-dss'];
 const DOMAIN_SECTIONS = [
   '## When this sheet applies',
   '## Goal & tests',
@@ -96,6 +96,13 @@ test('iso8583 sheet keeps the payment never-cuts', () => {
   const demo = ref.match(/\]\(([^)]*examples\/js\/iso8583\.js)\)/);
   assert.ok(demo, 'links the demo');
   assert.ok(fs.existsSync(path.join(ROOT, 'skills', 'yuuka', 'references', demo[1])), 'demo link resolves');
+});
+
+test('pci-dss sheet keeps the card-data never-cuts', () => {
+  const ref = read('skills', 'yuuka', 'references', 'pci-dss.md');
+  for (const needle of [/untrusted/i, /minor units/i, /never float/i, /mask/i, /3\.3\.1/, /3\.4\.1/,
+    /3\.5\.1\.1/, /nonce/i, /constant time/i, /zeroed/i, /test cards only/i, /leak test/i,
+    /views never outlive/i]) assert.match(ref, needle);
 });
 
 test('main skill carries the full ruleset', () => {

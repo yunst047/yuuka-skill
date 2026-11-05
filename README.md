@@ -43,6 +43,14 @@ It also has a **domain sheet** for **ISO 8583 payment gateways** ([iso8583.md](s
 - request/response matching keys and timeout reversals;
 - PCI-safe logging.
 
+A second domain sheet covers **PCI DSS card-data handling** ([pci-dss.md](skills/yuuka/references/pci-dss.md)):
+
+- the PAN as wipeable digit bytes, never a string or `int64`;
+- AES-GCM sealed into one exact-size buffer, with the AEAD and HMAC built once;
+- `[32]byte` fingerprint keys, and masking and log redaction into fixed scratch buffers with no allocations;
+- pooled buffers zeroed before reuse;
+- a never-cut list for crypto, SAD, masking, constant-time compares and the leak test.
+
 **Never cut these:**
 - no allocation sized from an untrusted length without a cap;
 - no views into reused or freed buffers;

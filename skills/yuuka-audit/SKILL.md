@@ -15,7 +15,7 @@ edit anything; this is the audit, not the fix.
 
 ## Method
 
-1. Detect the language and open its sheet in `../yuuka/references/<lang>.md`. If the code frames, parses or packs ISO 8583 payment messages, open `../yuuka/references/iso8583.md` too.
+1. Detect the language and open its sheet in `../yuuka/references/<lang>.md`. If the code frames, parses or packs ISO 8583 payment messages, open `../yuuka/references/iso8583.md` too. If it handles cardholder data (PAN, CVV, tokenise, encrypt, mask, redact), open `../yuuka/references/pci-dss.md` too.
 2. Walk every loop, builder, collection, string assembly and function signature in scope. For each one, check the ledger rungs:
    - **size**: is the size known? Is the container right?
    - **type**: letter vs number, width, boxing.
